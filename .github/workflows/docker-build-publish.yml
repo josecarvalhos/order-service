@@ -39,8 +39,11 @@ jobs:
     # Passo 6: Aguardar os containers estarem prontos (ex: PostgreSQL)
     - name: Wait for PostgreSQL to be ready
       run: |
-        # Espera o PostgreSQL ficar disponível
-        timeout 300 bash -c 'until pg_isready -h postgres-container -U postgres; do echo "Esperando o PostgreSQL..."; sleep 5; done;'
+        until docker exec -t postgres-container pg_isready -U postgres; do
+          echo "Waiting for PostgreSQL to be ready..."
+          sleep 5  # Espera 5 segundos antes de tentar novamente
+        done
+          echo "PostgreSQL is ready!"
 
     # Passo 7: Construir a imagem da aplicação (caso seja necessário)
     - name: Build Docker image for the app
