@@ -1,0 +1,48 @@
+server:
+  servlet:
+    contextPath: '/oreder-service/rest'
+  port: ${PORT:8080}
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/postgres
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 10
+      idle-timeout: 30000
+      pool-name: HikariPool-1
+      max-lifetime: 1800000
+      connection-timeout: 20000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        default_schema: order_service
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID:order-group}
+      topic: ${KAFKA_TOPIC_NAME:order-topic}
+      auto-offset-reset: earliest
+    producer:
+      retries: 3                         # Número de tentativas em caso de falha
+      batch-size: 16384                  # Tamanho do lote em bytes
+      linger-ms: 1                       # Tempo de espera para enviar mensagens em lote
+      buffer-memory: 33554432            # Tamanho do buffer do produtor
+    topics:
+      input: orders.in
+      output: orders.out
+        
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
