@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  app:	
+  app:
     build:
       context: .
     ports:
@@ -14,14 +14,13 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-
     deploy: # Ignorado fora do modo swarm
       resources:
         limits:
           memory: 2g
           cpus: '1.0'
     mem_limit: 2g # Compatível com standalone
-    cpus: 1.0     # Compatível com standalone
+    cpus: 1.0 # Compatível com standalone
 
   kafka:
     image: confluentinc/cp-kafka:latest
