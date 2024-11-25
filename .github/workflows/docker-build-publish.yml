@@ -1,6 +1,5 @@
 name: Build, Test and Deploy Docker Images
 
-# Dispara o workflow em eventos de push na branch 'main'
 on:
   push:
     branches:
@@ -8,53 +7,46 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest  # O runner do GitHub que estará executando os passos
+    runs-on: ubuntu-latest
 
     steps:
-    # Passo 1: Check out do repositório
     - name: Check out repository
-      uses: actions/checkout@v2  # Ação para fazer checkout do código
+      uses: actions/checkout@v2
 
-    # Passo 2: Set Docker Buildx para multi-plataforma
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    # Passo 3: Login no Docker Hub
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}  # Seu Docker Hub Username
-        password: ${{ secrets.DOCKER_PASSWORD }}  # Seu Docker Hub Token ou Password
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # Passo 4: Subir os containers com Docker Compose
     - name: Start services with Docker Compose
       run: |
-        docker-compose -f docker-compose.yml up -d  # Inicializa os containers em segundo plano
+        docker-compose -f docker-compose.yml up -d
+        docker ps  # Verifica se os containers estão rodando
 
-    # Passo 5: Aguardar os containers estarem prontos (ex: PostgreSQL)
     - name: Wait for PostgreSQL to be ready
       run: |
-        # Espera o PostgreSQL ficar disponível
-        docker exec -t postgres-container pg_isready -U postgres
+        until docker exec postgres-container pg_isready -U postgres; do
+          echo "Waiting for PostgreSQL..."
+          sleep 5
+        done
+        echo "PostgreSQL is ready!"
 
-    # Passo 6: Construir a imagem da aplicação (caso seja necessário)
     - name: Build Docker image for the app
       run: |
-        docker-compose build app  # Caso tenha uma construção específica para a aplicação
+        docker-compose build app
 
-    # Passo 7: Empurrar a imagem para o Docker Hub (caso aplicável)
     - name: Push Docker image to Docker Hub
       run: |
-        docker-compose push app  # Empurra a imagem da aplicação para o Docker Hub (ajuste conforme necessário)
+        docker-compose push app
 
-    # Passo 8: Testes ou outras ações aqui (opcional)
     - name: Run tests
       run: |
-        # Comandos para rodar testes ou outro processo de integração
-        echo "Rodando testes..."
+        pytest tests/
 
-    # Passo 9: Parar os containers após o processo
     - name: Stop services
       run: |
-        docker-compose down  # Para e remove os containers do Docker Compose
-
+        docker-compose down
