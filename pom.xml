@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>br.com.order</groupId>
 	<artifactId>order-service</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>order-service</name>
 	<description>Serviço de gerenciamento de pedidos</description>
 	<url />
