@@ -1,12 +1,16 @@
 package br.com.orderservice.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 
-import br.com.orderservice.DTO.ProdutoRequestDTO;
-import br.com.orderservice.model.Produtos;
+import br.com.orderservice.DTO.ProdutoDTO;
+import br.com.orderservice.model.Produto;
 
 @Mapper(componentModel = "spring")
 public interface ProdutoMapper {
 
-	Produtos toEntity(ProdutoRequestDTO ProdutoDTO);
+	ProdutoDTO toDTO(Produto Produto);
+	
+	List<ProdutoDTO> toListDTO(List<Produto> Produtos);
 }

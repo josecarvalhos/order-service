@@ -1,14 +1,13 @@
 server:
   servlet:
-    contextPath: '/oreder-service/rest'
+    contextPath: '/order'
   port: ${PORT:8080}
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/postgres
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: admin
-    driver-class-name: org.postgresql.Driver
     hikari:
       minimum-idle: 5
       maximum-pool-size: 10
@@ -16,7 +15,6 @@ spring:
       pool-name: HikariPool-1
       max-lifetime: 1800000
       connection-timeout: 20000
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -24,6 +22,21 @@ spring:
     properties:
       hibernate:
         default_schema: order_service
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+#  datasource:
+#    url: jdbc:postgresql://localhost:5433/postgres
+#    username: postgres
+#    password: admin
+#    driver-class-name: org.postgresql.Driver
+
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        default_schema: order_service
 
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}

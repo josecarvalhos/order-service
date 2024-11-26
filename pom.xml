@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>br.com.order</groupId>
 	<artifactId>order-service</artifactId>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>order-service</name>
 	<description>Serviço de gerenciamento de pedidos</description>
 	<url />
@@ -74,10 +74,11 @@
 
 		<!-- Swagger -->
 		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-boot-starter</artifactId>
-			<version>3.0.0</version>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.1.0</version> <!-- Verifique pela versão mais recente -->
 		</dependency>
+
 
 		<!-- JUnit 5 -->
 		<dependency>
@@ -140,6 +141,13 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.30</version>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version> <!-- Ou a versão compatível com sua
+			aplicação -->
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

@@ -2,8 +2,8 @@ package br.com.orderservice.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -12,46 +12,50 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
-public class Pedidos {
+@Table(name = "pedido", indexes = { @Index(name = "idx_pedido_status", columnList = "status"),
+		@Index(name = "idx_pedido_numero", columnList = "numero") })
+public class Pedido {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String numero;
+	@Column(nullable = false, unique = true, length = 255)
+	private String numero;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Produtos> produtos;
+	@Column(nullable = false, precision = 15, scale = 2)
+	private BigDecimal valorTotal;
 
-    @Column(nullable = false, precision = 15, scale = 2)
-    private BigDecimal valorTotal;
+	@Column(nullable = false, length = 50)
+	private String status;
 
-    private String status;
+	@Column(nullable = false, updatable = false)
+	private LocalDateTime dataCriacao;
 
-    @Column
-    private LocalDateTime dataCriacao;
+	@Column(name = "data_atualizacao")
+	private LocalDateTime dataAtualizacao;
 
-    @Column
-    private LocalDateTime dataAtualizacao;
-    
-    
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<PedidoProduto> itens = new HashSet<>();
 
-	public Pedidos() {
+	public Pedido() {
 	}
 
-	public Pedidos(Long id, String numero, List<Produtos> produtos, BigDecimal valorTotal, String status,
-			LocalDateTime dataCriacao, LocalDateTime dataAtualizacao) {
+	public Pedido(Long id, String numero, BigDecimal valorTotal, String status, LocalDateTime dataCriacao,
+			LocalDateTime dataAtualizacao, Set<PedidoProduto> itens) {
+		super();
 		this.id = id;
 		this.numero = numero;
-		this.produtos = produtos;
 		this.valorTotal = valorTotal;
 		this.status = status;
 		this.dataCriacao = dataCriacao;
 		this.dataAtualizacao = dataAtualizacao;
+		this.itens = itens;
 	}
 
 	public Long getId() {
@@ -68,14 +72,6 @@ public class Pedidos {
 
 	public void setNumero(String numero) {
 		this.numero = numero;
-	}
-
-	public List<Produtos> getProdutos() {
-		return produtos;
-	}
-
-	public void setProdutos(List<Produtos> produtos) {
-		this.produtos = produtos;
 	}
 
 	public BigDecimal getValorTotal() {
@@ -110,21 +106,19 @@ public class Pedidos {
 		this.dataAtualizacao = dataAtualizacao;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
+	public Set<PedidoProduto> getItens() {
+		return itens;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Pedidos other = (Pedidos) obj;
-		return Objects.equals(id, other.id);
+	public void setItens(Set<PedidoProduto> itens) {
+		this.itens = itens;
 	}
-    
+
+	public void adicionarItens(Set<PedidoProduto> itens) {
+		this.itens.clear();
+		itens.forEach(item -> {
+			item.setPedido(this);
+			this.itens.add(item);
+		});
+	}
 }
