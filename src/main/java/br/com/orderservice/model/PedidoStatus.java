@@ -2,6 +2,11 @@ package br.com.orderservice.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum PedidoStatus {
     PENDENTE("Pendente"),
@@ -9,12 +14,5 @@ public enum PedidoStatus {
     CANCELADO("Cancelado");
 
     private final String descricao;
-    
-    PedidoStatus(String descricao) {
-        this.descricao = descricao;
-    }
 
-	public String getDescricao() {
-		return descricao;
-	}
 }

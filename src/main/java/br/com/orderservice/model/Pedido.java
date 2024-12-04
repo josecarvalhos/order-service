@@ -15,7 +15,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "pedido", indexes = { @Index(name = "idx_pedido_status", columnList = "status"),
 		@Index(name = "idx_pedido_numero", columnList = "numero") })
@@ -42,77 +48,6 @@ public class Pedido {
 
 	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<PedidoProduto> itens = new HashSet<>();
-
-	public Pedido() {
-	}
-
-	public Pedido(Long id, String numero, BigDecimal valorTotal, String status, LocalDateTime dataCriacao,
-			LocalDateTime dataAtualizacao, Set<PedidoProduto> itens) {
-		super();
-		this.id = id;
-		this.numero = numero;
-		this.valorTotal = valorTotal;
-		this.status = status;
-		this.dataCriacao = dataCriacao;
-		this.dataAtualizacao = dataAtualizacao;
-		this.itens = itens;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNumero() {
-		return numero;
-	}
-
-	public void setNumero(String numero) {
-		this.numero = numero;
-	}
-
-	public BigDecimal getValorTotal() {
-		return valorTotal;
-	}
-
-	public void setValorTotal(BigDecimal valorTotal) {
-		this.valorTotal = valorTotal;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public LocalDateTime getDataCriacao() {
-		return dataCriacao;
-	}
-
-	public void setDataCriacao(LocalDateTime dataCriacao) {
-		this.dataCriacao = dataCriacao;
-	}
-
-	public LocalDateTime getDataAtualizacao() {
-		return dataAtualizacao;
-	}
-
-	public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
-		this.dataAtualizacao = dataAtualizacao;
-	}
-
-	public Set<PedidoProduto> getItens() {
-		return itens;
-	}
-
-	public void setItens(Set<PedidoProduto> itens) {
-		this.itens = itens;
-	}
 
 	public void adicionarItens(Set<PedidoProduto> itens) {
 		this.itens.clear();

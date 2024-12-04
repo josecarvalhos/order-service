@@ -20,7 +20,7 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
 	@Operation(summary = "Listar Produtos", description = "Endpoint para listar produtos cadastrados")
-	@GetMapping("/{numero}")
+	@GetMapping
     public ResponseEntity<List<ProdutoDTO>> buscarPedido() {
         List<ProdutoDTO> pedidos = produtoService.ListarTodos();
         return ResponseEntity.ok(pedidos);
